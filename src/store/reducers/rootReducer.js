@@ -1,5 +1,7 @@
 import {combineReducers} from 'redux'
 import {authReducer} from './authReducer'
+import {signInReducer} from './signInReducer'
+import {chatReducer} from './chatReducer'
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk';
 
@@ -10,7 +12,9 @@ const composeEnhancers =
     }) : compose;
 
 const rootReducer = combineReducers({
-    authReducer
+    authReducer,
+    signInReducer,
+    chatReducer
 })
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)))
 

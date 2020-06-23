@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react'
 import TextField from '@material-ui/core/TextField';
 import { useDispatch, useSelector } from 'react-redux'
-import { getPasswordValue } from '../store/actions/Auth';
+import { getPasswordValue } from '../store/actions/AuthActions';
 
 export const InputPassword = () => {
     const state = useSelector(state => state.authReducer)

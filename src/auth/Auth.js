@@ -9,6 +9,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Box from '@material-ui/core/Box';
+import { FormSignIn } from './signIn/FormSignIn';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -47,12 +48,16 @@ const useStyles = makeStyles((theme) => ({
     root: {
         backgroundColor: 'rgba(205, 214, 219, 0.3)',
         width: 500,
-        height: 500,
+        height: 550,
         border: '#C3C3C3 3px solid',
         borderTop: 'none',
-        borderBottomRightRadius:15,
-        borderBottomLeftRadius:15,
+        borderBottomRightRadius: 15,
+        borderBottomLeftRadius: 15,
     },
+    inputStyle:{
+        display: 'flex', 
+        justifyContent: 'center'
+    }
 }));
 
 export const Auth = () => {
@@ -72,34 +77,33 @@ export const Auth = () => {
     return (
         <div className={s.Auth}>
             <div className={s.container}>
-            <div className={classes.root}>
-                <AppBar position="static" color="default">
-                    <Tabs
-                        value={value}
-                        onChange={handleChange}
-                        indicatorColor="primary"
-                        textColor="primary"
-                        variant="fullWidth"
-                        aria-label="full width tabs example"
+                <div className={classes.root}>
+                    <AppBar position="static" color="default">
+                        <Tabs
+                            value={value}
+                            onChange={handleChange}
+                            indicatorColor="primary"
+                            textColor="primary"
+                            variant="fullWidth"
+                            aria-label="full width tabs example"
+                        >
+                            <Tab label="Sign in" {...a11yProps(0)} />
+                            <Tab label="Sing up" {...a11yProps(1)} />
+                        </Tabs>
+                    </AppBar>
+                    <SwipeableViews
+                        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+                        index={value}
+                        onChangeIndex={handleChangeIndex}
                     >
-                        <Tab label="Sign in" {...a11yProps(0)} />
-                        <Tab label="Sing up" {...a11yProps(1)} />
-                    </Tabs>
-                </AppBar>
-                <SwipeableViews
-                    axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                    index={value}
-                    onChangeIndex={handleChangeIndex}
-                >
-                    <TabPanel value={value} index={0} dir={theme.direction}>
-                        Item One
-          </TabPanel>
-                    <TabPanel value={value} index={1} dir={theme.direction}>
-                        <FormComponent />
-                    </TabPanel>
-
-                </SwipeableViews>
-            </div>
+                        <TabPanel value={value} index={0} dir={theme.direction} className={classes.inputStyle}>
+                            <FormSignIn />
+                        </TabPanel>
+                        <TabPanel value={value} index={1} dir={theme.direction} className={classes.inputStyle}>
+                            <FormComponent />
+                        </TabPanel>
+                    </SwipeableViews>
+                </div>
             </div>
         </div>
     )
