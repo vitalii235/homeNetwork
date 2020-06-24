@@ -1,9 +1,10 @@
 import React from 'react'
+import { MessagesList } from './messages/MessagesList'
 
 export default function Messages() {
     return (
         <div>
-            This is message
+            <MessagesList/>
         </div>
     )
 }

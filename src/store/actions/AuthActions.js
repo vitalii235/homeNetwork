@@ -22,7 +22,7 @@ import {
     SPINER_IS_ACTIVE,
     SPINER_IS_NOT_ACTIVE
 } from "../types"
-import { authApi } from "../../services/API"
+import { authApi, userApi } from "../../services/API"
 
 export const getEmailValue = payload => {
     return {
@@ -177,15 +177,19 @@ export const singUp = (item, userEmail, userPassword, nikName, avatar ) => {
                 if (!isUserRegistred[0] && isPasswordLong.length > 5 && !isNikNameExist[0] && nikName.length > 0 && userEmail.length > 0) {
                     try {
                         const r = await authApi.signUp(item)
+                        console.log('THIS IS RES===>>>', r);
                         
                         if (r) {
                             const user = {
                                 email: r.data.email,
                                 nikName,
                                 userId: r.data.localId,
-                                avatar
+                                avatar,
                             }
-                            await authApi.postUsers(user)
+                            const result = await authApi.postUsers(user)
+                            console.log(result);
+                            user.userApiAdress=result.data.name
+                            userApi.addFriend(result.data.name, user)
                             dispatch(userIsRegistred())
                             dispatch(spinereIsNotActive())
                             setTimeout(() => {

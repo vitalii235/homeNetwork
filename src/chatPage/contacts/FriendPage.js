@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
 import { SendMessageButton } from './SendMessageButton';
-import { ModalComponent } from './ModalComponent';
+import { ModalComponent } from './modal/ModalComponent';
 
 
 export const FriendPage = ({ match }) => {
@@ -17,7 +17,6 @@ export const FriendPage = ({ match }) => {
             if (userData.friends[i].nikName === match.params.id) {
                 let thisUser = new CertainUser(i, userData.friends[i])
                 certainUser = thisUser
-                console.log(certainUser);
             }
         }
     }
@@ -50,7 +49,8 @@ export const FriendPage = ({ match }) => {
                         <img src={certainUser.data.avatar} style={styles.image} />
                     </div>
                     <SendMessageButton />
-                    <ModalComponent />
+                    <ModalComponent 
+                    certainFriend={certainUser}/>
                 </div>
                 : null}
         </div>

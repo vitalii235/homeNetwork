@@ -22,7 +22,7 @@ import {
 export const SignUp = () => {
     const dispatch = useDispatch()
     const state = useSelector(state => state.authReducer)
-    const { email, password, nikName, avatar, avatarStatus } = state.auth
+    const { email, password, nikName, avatar } = state.auth
 
 
     return (

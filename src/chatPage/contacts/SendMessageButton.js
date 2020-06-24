@@ -1,9 +1,9 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import Icon from '@material-ui/core/Icon';
 import { useDispatch } from 'react-redux';
 import { modalIsOpen } from '../../store/actions/MainPageActions';
+import MessageOutlinedIcon from '@material-ui/icons/MessageOutlined';
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -22,7 +22,7 @@ export const SendMessageButton = () => {
                 variant="contained"
                 color="primary"
                 className={classes.button}
-                endIcon={<Icon>send</Icon>}
+                endIcon={<MessageOutlinedIcon>send</MessageOutlinedIcon>}
             >
                 Text the message
       </Button>

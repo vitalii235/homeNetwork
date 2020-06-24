@@ -4,9 +4,10 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import { useSelector, useDispatch } from 'react-redux';
-import { modalIsClose } from '../../store/actions/MainPageActions';
+import { modalIsClose } from '../../../store/actions/MainPageActions';
 import { InputModal } from './InputModal';
 import { InputModalPassword } from './InputModalPassword';
+import { ModalButton } from './ModalButton';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -20,19 +21,18 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
     display: 'flex',
-    flexDirection:'column',
+    flexDirection: 'column',
     alignItems: 'center',
   },
-  inputs:{
+  inputs: {
     display: 'flex',
-    flexDirection:'column',
+    flexDirection: 'column',
     alignItems: 'center',
   }
 }));
 
-export const ModalComponent = () => {
+export const ModalComponent = ({certainFriend}) => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
   const { modalStatus } = useSelector(state => state.chatReducer)
   const dispatch = useDispatch()
 
@@ -64,6 +64,10 @@ export const ModalComponent = () => {
               </div>
               <div>
                 <InputModalPassword />
+              </div>
+              <div>
+                <ModalButton 
+                certainFriend={certainFriend}/>
               </div>
             </div>
           </div>

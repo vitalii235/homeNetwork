@@ -4,7 +4,6 @@ const SIGN_IN_BAE_URLS = 'https://identitytoolkit.googleapis.com/v1/accounts:sig
 const API_FOR_WEB = 'AIzaSyB6eqmvtgwdFbMHAr0uiBOGZcmCHvFlhAg'
 const BASE_URL = 'https://network-35b44.firebaseio.com/'
 const AUTH_USERS = 'auth/users'
-const BASE_USERS_URL = 'https://network-35b44.firebaseio.com'
 
 export const authApi = {
     signUp: (params) => axios.post(`${REGISTRATION_URL}${API_FOR_WEB}`, params),
@@ -14,4 +13,10 @@ export const authApi = {
 }
 export const userApi = {
     addFriend: (id, params) => axios.put(`${BASE_URL}${AUTH_USERS}/${id}.json`, params)
+}
+export const modalApi = {
+    sendMessage: (friend, params) => axios.post(`${BASE_URL}${AUTH_USERS}/${friend}/messages.json`, params)
+}
+export const messageApi ={
+    messageList:(user, params=null)=>axios(`${BASE_URL}${AUTH_USERS}/${user}/messages.json`, params)
 }

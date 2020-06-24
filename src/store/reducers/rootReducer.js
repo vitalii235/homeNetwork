@@ -1,7 +1,9 @@
-import {combineReducers} from 'redux'
-import {authReducer} from './authReducer'
-import {signInReducer} from './signInReducer'
-import {chatReducer} from './chatReducer'
+import { combineReducers } from 'redux'
+import { authReducer } from './authReducer'
+import { signInReducer } from './signInReducer'
+import { chatReducer } from './chatReducer'
+import { modalReducer } from './modalReducer'
+import {messageReducer} from './messageReducer'
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk';
 
@@ -12,9 +14,11 @@ const composeEnhancers =
     }) : compose;
 
 const rootReducer = combineReducers({
-    authReducer,
-    signInReducer,
-    chatReducer
+  authReducer,
+  signInReducer,
+  chatReducer,
+  modalReducer,
+  messageReducer
 })
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(thunk)))
 

@@ -37,13 +37,13 @@ export const ListOfFindUsers = () => {
             for (let j in chatState.allUsers) {
                 if (chatState.allUsers[j].nikName === item ) {
                     const user = chatState.allUsers[j]
+                    console.log('THIS IS MASSIVE',user);
                     const newUserData = userData
                     newUserData.friends = [...newUserData.friends, user]
                     try {
                         await userApi.addFriend(userApiAdress, newUserData)
                     } catch (e) {
                         console.error(e);
-    
                     }
                 }
             }
