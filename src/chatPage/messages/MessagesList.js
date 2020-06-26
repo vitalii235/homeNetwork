@@ -4,33 +4,53 @@ import { makeStyles } from '@material-ui/core/styles';
 import SnackbarContent from '@material-ui/core/SnackbarContent';
 import { messageApi } from '../../services/API';
 import { useSelector, useDispatch } from 'react-redux';
-import { listOfMessages } from '../../store/actions/MessageActions'
-
-const action = (
-    <Button color="secondary" size="small">
-        remove
-    </Button>
-);
+import { listOfMessages, messageModalIsOper, getCurrentMessage, getCurrentMessageId } from '../../store/actions/MessageActions';
+import Avatar from '@material-ui/core/Avatar';
+import { MessageModal } from './MessageModal';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        maxWidth: 600,
+        maxWidth: 800,
         '& > * + *': {
             marginTop: theme.spacing(2),
         },
     },
+    messageText: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'start',
+        margin: 10
+    },
+    messagePerson: {
+        display: 'flex',
+        justifyContent: 'start',
+        alignItems: 'center'
+    }
 }));
 
 export const MessagesList = () => {
     const classes = useStyles();
     const dispatch = useDispatch()
     const { userData } = useSelector(state => state.signInReducer)
-    const { messageList } = useSelector(state => state.messageReducer)
+    const { messageList, modalInputValue } = useSelector(state => state.messageReducer)
     const userApi = userData.userApiAdress
+
+    const iteratedState = i => {
+        const newArr = []
+        for (let item in i.data) {
+            const message = {
+                messageApi: item,
+                ...i.data[item]
+            }
+            newArr.push(message)
+        }
+        return newArr
+    }
+
     const getAllMessages = async () => {
         try {
             const r = await messageApi.messageList(userApi)
-            dispatch(listOfMessages(r.data))
+            dispatch(listOfMessages(iteratedState(r)))
         } catch (e) {
             console.error(e);
         }
@@ -38,31 +58,45 @@ export const MessagesList = () => {
     useEffect(() => {
         getAllMessages()
     }, [])
-    const messagesIterated = (messages) => {
-        const message = []
-        for (let i in messages) {
-            const messageDate = {
-                messageApi: i,
-                ...messages[i]
-            }
-            message.push(messageDate)
-        }
-        console.log(message);
 
-        return message
-    }
+    const action = (item, id) => (
+        <div>
+            <Button color="secondary" size="small">
+                remove
+        </Button>
+            {item.password.length > 0
+                &&
+                <Button color="secondary" size="small" onClick={() => {
+                    dispatch(messageModalIsOper())
+                    dispatch(getCurrentMessage(item))
+                    dispatch(getCurrentMessageId(id))
+                }}>
+                    unlock
+        </Button>}
+        </div>
+    )
 
     return (
         <div className={classes.root}>
-            {messagesIterated(messageList).map((item) => (<SnackbarContent
+            <MessageModal />
+            {messageList.map((item, id) => (<SnackbarContent
                 message={
-                    <div>
-                        <div>{`from:${item.from}`}</div>
-                        <div>{`message:${item.message}`}</div>
+                    <div className={classes.messageText}>
+                        <div className={classes.messagePerson}>
+                            <Avatar alt="message from" src={item.avatarFrom} />
+                            {`from:${item.from}`}
+                        </div>
+                        <div className={classes.messageText}>
+                            {item.password.length > 0 ? 'TAP UNLOCK TO SHOW THIS MESSAGE' : `message: ${item.message}`}
+                        </div>
+                        <div className={classes.messagePerson}>
+                            <Avatar alt="message to" src={item.avatarTo} />
+                            {`to:${item.to}`}
+                        </div>
                     </div>
                 }
-                action={action}
-                key={Math.random()} />))}
+                action={action(item, id)}
+                key={Math.random()} />)).reverse()}
         </div>
     );
 }

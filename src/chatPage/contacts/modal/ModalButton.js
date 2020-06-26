@@ -20,15 +20,21 @@ export const ModalButton = ({ certainFriend }) => {
     console.log('certainUser', userData);
     console.log('certainFriend', certainFriend.data);
 
+    class MessageParams {
+        constructor(from, avatarFrom, to, avatarTo, message, password) {
+            this.from = from;
+            this.avatarFrom = avatarFrom;
+            this.to = to;
+            this.avatarTo = avatarTo
+            this.date = new Date().getTime();
+            this.message = message;
+            this.password = password
+        }
+    }
+
     const sendMessageFunction = async () => {
         try {
-            const messageParams = {
-                from: userData.nikName,
-                to: certainFriend.data.nikName,
-                date: new Date().getTime(),
-                message: textAreaValue,
-                password: inputPasswordValue
-            }
+            const messageParams = new MessageParams(userData.nikName, userData.avatar, certainFriend.data.nikName, certainFriend.data.avatar, textAreaValue, inputPasswordValue)
             await modalApi.sendMessage(certainFriend.data.userApiAdress, messageParams)
             await modalApi.sendMessage(userData.userApiAdress, messageParams)
             dispatch(clearModalValue())
