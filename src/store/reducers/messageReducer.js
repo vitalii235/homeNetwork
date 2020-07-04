@@ -1,4 +1,13 @@
-import { GET_ALL_MESSAGES, MESSAGE_MODAL_IS_CLOSED, MESSAGE_MODAL_IS_OPEN, MODAL_MESSAGE_INPUT_VALUE, GET_CURRENT_MESSAGE, GET_CURRENT_MESSAGE_ID, PASSWORD_IS_VALID, PASSWORD_IS_INVALID } from "../types"
+import {
+    GET_ALL_MESSAGES,
+    MESSAGE_MODAL_IS_CLOSED,
+    MESSAGE_MODAL_IS_OPEN,
+    MODAL_MESSAGE_INPUT_VALUE,
+    GET_CURRENT_MESSAGE,
+    GET_CURRENT_MESSAGE_ID,
+    PASSWORD_IS_VALID,
+    PASSWORD_IS_INVALID
+} from "../types"
 
 const initialState = {
     messageList: [],
@@ -6,7 +15,7 @@ const initialState = {
     modalInputValue: '',
     currentMessage: '',
     currentId: '',
-    passwordValid:true
+    passwordValid: true
 }
 
 export const messageReducer = (state = initialState, action) => {
@@ -36,15 +45,14 @@ export const messageReducer = (state = initialState, action) => {
                 ...state, currentId: action.payload
             }
         case PASSWORD_IS_VALID:
-            return{
-                ...state, passwordValid:true
+            return {
+                ...state, passwordValid: true
             }
         case PASSWORD_IS_INVALID:
-            return{
-                ...state, passwordValid:false
+            return {
+                ...state, passwordValid: false
             }
         default:
             return state
     }
-
 }

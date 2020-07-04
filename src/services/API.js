@@ -1,8 +1,8 @@
 import axios from 'axios'
 const REGISTRATION_URL = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key='
 const SIGN_IN_BAE_URLS = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key='
-const API_FOR_WEB = 'AIzaSyB6eqmvtgwdFbMHAr0uiBOGZcmCHvFlhAg'
-const BASE_URL = 'https://network-35b44.firebaseio.com/'
+const API_FOR_WEB = 'AIzaSyD0ca0HOB1WnWyNkTG5blqDZd_0dS9tN-o'
+const BASE_URL = 'https://network-323df.firebaseio.com/'
 const AUTH_USERS = 'auth/users'
 
 export const authApi = {
@@ -12,11 +12,15 @@ export const authApi = {
     usersList: (params = null) => axios(`${BASE_URL}${AUTH_USERS}.json`, params)
 }
 export const userApi = {
-    addFriend: (id, params) => axios.put(`${BASE_URL}${AUTH_USERS}/${id}.json`, params)
+    addFriend: (id, params) => axios.post(`${BASE_URL}${AUTH_USERS}/${id}/friends.json`, params),
+    friendsList:(user)=>axios(`${BASE_URL}${AUTH_USERS}/${user}/friends.json`),
+    deleteFriend: (user, adress) => axios.delete(`${BASE_URL}${AUTH_USERS}/${user}/friends/${adress}.json`)
 }
 export const modalApi = {
-    sendMessage: (friend, params) => axios.post(`${BASE_URL}${AUTH_USERS}/${friend}/messages.json`, params)
+    sendMessage: (friend, params) => axios.post(`${BASE_URL}${AUTH_USERS}/${friend}/messages.json`, params),
+    getFullMessage: (friend, message, params) => axios.put(`${BASE_URL}${AUTH_USERS}/${friend}/messages/${message}.json`, params)
 }
-export const messageApi ={
-    messageList:(user, params=null)=>axios(`${BASE_URL}${AUTH_USERS}/${user}/messages.json`, params)
+export const messageApi = {
+    messageList: (user, params = null) => axios(`${BASE_URL}${AUTH_USERS}/${user}/messages.json`, params),
+    removeMessage: (user, adress) => axios.delete(`${BASE_URL}${AUTH_USERS}/${user}/messages/${adress}.json`)
 }

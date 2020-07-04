@@ -25,12 +25,12 @@ export const InputModalPassword = () => {
     return (
         <form className={classes.root} noValidate autoComplete="off">
             <TextField
-                onChange={handleChangeInput}
-                id="outlined-basic"
-                label="Your special code"
+                id="outlined-password-input"
+                label="Password"
+                type="password"
                 variant="outlined"
                 value={inputPasswordValue}
-
+                onChange={handleChangeInput}
             />
         </form>
     );

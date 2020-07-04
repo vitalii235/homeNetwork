@@ -16,11 +16,14 @@ import {
     EMAIL_IS_CORRECT,
     EMAIL_IS_EMPTY,
     EMAIL_IS_NOT_EMPTY,
-    IMG_VALUE,
-    IMG_IS_CORRECT,
-    IMG_IS_NOT_CORRECT,
     SPINER_IS_ACTIVE,
-    SPINER_IS_NOT_ACTIVE
+    SPINER_IS_NOT_ACTIVE,
+    UPLOAD_MODAL_IS_OPEN,
+    UPLOAD_MODAL_IS_CLOSED,
+    UPLOAD_FILES,
+    GET_LINK_TO_AVATAR,
+    IMAGE_IS_UPLOADEDING,
+    IMAGE_HAS_BEEN_UPLOADED
 } from "../types"
 
 const initialState = {
@@ -28,7 +31,7 @@ const initialState = {
         email: '',
         password: '',
         nikName: '',
-        avatar: '',
+        linkToAvatar: '',
         avatarStatus: true,
         isUserExist: false,
         passwodLength: true,
@@ -37,7 +40,10 @@ const initialState = {
         isEmailCorrect: true,
         emailLangth: true,
         isUserRegistred: false,
-        spiner: false
+        spiner: false,
+        uploadModalStatus: false,
+        image: '',
+        isSignUpActive:false
     }
 }
 
@@ -60,24 +66,6 @@ export const authReducer = (state = initialState, action) => {
             nikNameValue.nikName = action.payload
             return {
                 ...state, auth: nikNameValue
-            }
-        case IMG_VALUE:
-            const imgValue = state.auth
-            imgValue.avatar = action.payload
-            return {
-                ...state, auth: imgValue
-            }
-        case IMG_IS_CORRECT:
-            const imgIsCorrect = state.auth
-            imgIsCorrect.avatarStatus = true
-            return {
-                ...state, auth: imgIsCorrect
-            }
-        case IMG_IS_NOT_CORRECT:
-            const imgIsNotCorrect = state.auth
-            imgIsNotCorrect.avatarStatus = false
-            return {
-                ...state, auth: imgIsNotCorrect
             }
         case USER_EXIST:
             const userExist = state.auth
@@ -121,7 +109,6 @@ export const authReducer = (state = initialState, action) => {
             usereRegistred.email = ''
             usereRegistred.password = ''
             usereRegistred.nikName = ''
-            usereRegistred.avatar = ''
             return {
                 ...state, auth: usereRegistred
             }
@@ -178,6 +165,42 @@ export const authReducer = (state = initialState, action) => {
             spinerIsNotActive.spiner = false
             return {
                 ...state, auth: spinerIsNotActive
+            }
+        case UPLOAD_MODAL_IS_OPEN:
+            const uploadModalIsOpen = state.auth
+            uploadModalIsOpen.uploadModalStatus = true
+            return {
+                ...state, auth: uploadModalIsOpen
+            }
+        case UPLOAD_MODAL_IS_CLOSED:
+            const uploadModalIsClosed = state.auth
+            uploadModalIsClosed.uploadModalStatus = false
+            return {
+                ...state, auth: uploadModalIsClosed
+            }
+        case UPLOAD_FILES:
+            const uploadFiles = state.auth
+            uploadFiles.image = action.payload
+            return {
+                ...state, auth: uploadFiles
+            }
+        case GET_LINK_TO_AVATAR:
+            const linkToAvatar = state.auth
+            linkToAvatar.linkToAvatar = action.payload
+            return {
+                ...state, auth: linkToAvatar
+            }
+        case IMAGE_IS_UPLOADEDING:
+            const signUpIsNotActive=state.auth
+            signUpIsNotActive.isSignUpActive=true
+            return{
+                ...state, isSignUpActive:signUpIsNotActive
+            }
+        case IMAGE_HAS_BEEN_UPLOADED:
+            const signUpIsActive = state.auth
+            signUpIsActive.isSignUpActive=false
+            return{
+                ...state, isSignUpActive:signUpIsActive
             }
         default:
             return state

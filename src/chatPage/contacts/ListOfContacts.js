@@ -17,7 +17,6 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: 360,
         backgroundColor: theme.palette.background.paper,
         color: 'grey',
-
     },
 }));
 const styles = {
@@ -32,9 +31,14 @@ export const ListOfContacts = () => {
         setOpen(!open);
     };
 
-    const state = useSelector(state => state.signInReducer)
+    const { userData } = useSelector(state => state.signInReducer)
+    const listOfFriends = []
+    if (userData.friends) {
+        for (let i in userData.friends) {
+            listOfFriends.push(userData.friends[i])
+        }
+    }
 
-    const { userData } = state
     return (
         <div>
             <List
@@ -48,7 +52,7 @@ export const ListOfContacts = () => {
                 }
                 className={classes.root}
             >
-                {userData.friends && userData.friends.slice(0, 2).map((i) => (
+                {userData.friends && listOfFriends.slice(0, 2).map((i) => (
                     <Link to={`/main/Friend/${i.nikName}`} key={Math.random()}>
                         <ListItem button >
                             <ImageAvatar url={i.avatar} />
@@ -56,12 +60,12 @@ export const ListOfContacts = () => {
                         </ListItem>
                     </Link>
                 ))}
-                {userData.friends && userData.friends.length > 2 &&
+                {userData.friends && listOfFriends.length > 2 &&
                     <div>
                         {open ? <ExpandLess onClick={handleClick} /> : <ExpandMore onClick={handleClick} />}
                         <Collapse in={open} timeout="auto" unmountOnExit>
                             <List component="div" disablePadding>
-                                {userData.friends && userData.friends.slice(2).map((item) => (
+                                {userData.friends && listOfFriends.slice(2).map((item) => (
                                     <Link to={`/main/Friend/${item.nikName}`} key={Math.random()}>
                                         <ListItem button>
                                             <ImageAvatar url={item.avatar} />
@@ -69,11 +73,9 @@ export const ListOfContacts = () => {
                                         </ListItem>
                                     </Link>
                                 ))}
-
                             </List>
                         </Collapse>
                     </div>}
-
             </List>
         </div>
 

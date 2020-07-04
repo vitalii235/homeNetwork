@@ -32,16 +32,14 @@ export const MessagesList = () => {
     const classes = useStyles();
     const dispatch = useDispatch()
     const { userData } = useSelector(state => state.signInReducer)
-    const { messageList, modalInputValue } = useSelector(state => state.messageReducer)
+    const { messageList } = useSelector(state => state.messageReducer)
     const userApi = userData.userApiAdress
 
-    const iteratedState = i => {
-        const newArr = []
-        for (let item in i.data) {
-            const message = {
-                messageApi: item,
-                ...i.data[item]
-            }
+    const iteratedState = data => {
+        let newArr = []
+        for (let i in data.data) {
+            const message = data.data[i]
+            message.id = i
             newArr.push(message)
         }
         return newArr
@@ -50,10 +48,22 @@ export const MessagesList = () => {
     const getAllMessages = async () => {
         try {
             const r = await messageApi.messageList(userApi)
+            let newArr = []
+            for (let i in r.data) {
+                const message = r.data[i]
+                message.id = i
+                newArr.push(message)
+            }
             dispatch(listOfMessages(iteratedState(r)))
         } catch (e) {
             console.error(e);
         }
+    }
+
+    const unlockMessage = (item, id) => {
+        dispatch(messageModalIsOper())
+        dispatch(getCurrentMessage(item))
+        dispatch(getCurrentMessageId(id))
     }
     useEffect(() => {
         getAllMessages()
@@ -61,21 +71,23 @@ export const MessagesList = () => {
 
     const action = (item, id) => (
         <div>
-            <Button color="secondary" size="small">
+            <Button color="secondary" size="small" onClick={async () => {
+                try {
+                    await messageApi.removeMessage(userApi, item.id)
+                    getAllMessages()
+                } catch (e) {
+                    console.error(e);
+                }
+            }}>
                 remove
         </Button>
             {item.password.length > 0
                 &&
-                <Button color="secondary" size="small" onClick={() => {
-                    dispatch(messageModalIsOper())
-                    dispatch(getCurrentMessage(item))
-                    dispatch(getCurrentMessageId(id))
-                }}>
+                <Button color="secondary" size="small" onClick={() => unlockMessage(item, id)}>
                     unlock
         </Button>}
         </div>
     )
-
     return (
         <div className={classes.root}>
             <MessageModal />
@@ -95,7 +107,7 @@ export const MessagesList = () => {
                         </div>
                     </div>
                 }
-                action={action(item, id)}
+                action={action(item, new Date().getTime())}
                 key={Math.random()} />)).reverse()}
         </div>
     );

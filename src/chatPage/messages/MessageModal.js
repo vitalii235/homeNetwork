@@ -26,7 +26,6 @@ export const MessageModal = () => {
     const {
         modalStatus,
         currentMessage,
-        currentId,
         modalInputValue,
         messageList,
         passwordValid
@@ -44,9 +43,14 @@ export const MessageModal = () => {
         dispatch(passwordIsValid())
     }
     const removeThePassword = () => {
+
         if (modalInputValue === currentMessage.password) {
             const newArrOfMessages = messageList
-            newArrOfMessages[currentId].password = ''
+            for (let i of newArrOfMessages) {
+                if (i.id === currentMessage.id) {
+                    i.password = ''
+                }
+            }
             dispatch(listOfMessages(newArrOfMessages))
             dispatch(messageModalIsClosed())
         } else {
@@ -73,11 +77,12 @@ export const MessageModal = () => {
                         <div>
                             {passwordValid
                                 ? <TextField
-                                    id="outlined-basic"
-                                    label="Outlined"
-                                    value={modalInputValue}
-                                    variant="password"
-                                    onChange={inputValue} />
+                                    id="outlined-password-input"
+                                    label="Password"
+                                    type="password"
+                                    variant="outlined"
+                                    value={modalInputValue} onChange={inputValue}
+                                />
                                 : <TextField
                                     error
                                     id="filled-error-helper-text"
@@ -87,6 +92,7 @@ export const MessageModal = () => {
                                     variant="filled"
                                     onChange={inputValue}
                                 />}
+
                             <MessageButton
                                 unlock={removeThePassword}
                             >UNLOCK

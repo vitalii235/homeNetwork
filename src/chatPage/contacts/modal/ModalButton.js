@@ -45,7 +45,7 @@ export const ModalButton = ({ certainFriend }) => {
     return (
         <div>
             <Button
-                onClick={() => sendMessageFunction()}
+                onClick={sendMessageFunction}
                 variant="contained"
                 color="primary"
                 className={classes.button}

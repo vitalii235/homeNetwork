@@ -8,6 +8,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { userApi } from '../../services/API';
 import { ErrorMessage } from './ErrorMessage';
 import { isYourFriend, isNotYourFriend } from '../../store/actions/MainPageActions';
+import { getUsers, userIsSignIn, userIteration } from '../../store/actions/SignInActions';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,36 +28,37 @@ export const ListOfFindUsers = () => {
     const { filtredNiknames, findFieldValue, friendInYourList } = chatState
     const { userApiAdress } = signInState.userData
     const { userData } = signInState
-
+    let history = useHistory()
     if (userData.friends === undefined) {
         userData.friends = []
     }
-    
+
     const addFriend = async (item) => {
-        const avaliableUsers = userData.friends.find((user)=>user.nikName===item)
-        if(!avaliableUsers){
+        const listOfFriends = []
+        for(let i in userData.friends){
+            listOfFriends.push(userData.friends[i])
+        }
+        const avaliableUsers = listOfFriends.find((user) => user.nikName === item)
+        if (!avaliableUsers) {
             for (let j in chatState.allUsers) {
-                if (chatState.allUsers[j].nikName === item ) {
+                if (chatState.allUsers[j].nikName === item) {
                     const user = chatState.allUsers[j]
-                    console.log('THIS IS MASSIVE',user);
-                    const newUserData = userData
-                    newUserData.friends = [...newUserData.friends, user]
                     try {
-                        await userApi.addFriend(userApiAdress, newUserData)
+                        await userApi.addFriend(userApiAdress, user)
+                        getUsers(history, userIsSignIn, userIteration, dispatch, 'Find')
                     } catch (e) {
                         console.error(e);
                     }
                 }
             }
-        }else{
+        } else {
             dispatch(isYourFriend())
-            setTimeout(()=>dispatch(isNotYourFriend()), 3000)
+            setTimeout(() => dispatch(isNotYourFriend()), 3000)
         }
-        
     }
     return (
         <div className={classes.root}>
-            {friendInYourList && <ErrorMessage/>}
+            {friendInYourList && <ErrorMessage />}
             {filtredNiknames.length > 0 && findFieldValue.length !== 0 &&
                 <List component="nav" aria-label="secondary mailbox folders">
                     {filtredNiknames.map((item) => (

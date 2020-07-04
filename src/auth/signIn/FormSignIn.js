@@ -2,7 +2,10 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import { SingInInputEmail } from './SignInInputEmail';
 import { SignInInputPassword } from './SignInInputPassword';
-import {SignIn} from './SignIn'
+import { SignButton } from '../../functions/SignButton'
+import { useSelector, useDispatch } from 'react-redux';
+import { signIn, userIsLogged } from '../../store/actions/SignInActions';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -16,14 +19,29 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export const FormSignIn=()=>{
+export const FormSignIn = () => {
+    const { email, password } = useSelector(state => state.signInReducer)
+    const dispatch = useDispatch()
+    let history = useHistory()
+    const handleSignIn = () => {
+        dispatch(userIsLogged())
+        const user = {
+            email,
+            password
+        }
+        dispatch(signIn(user, history))
+    }
     const wrapper = useStyles();
-    return(
+    return (
         <form className={wrapper.root} noValidate autoComplete="off">
-            <SingInInputEmail/>
-            <SignInInputPassword/>
+            <SingInInputEmail />
+            <SignInInputPassword />
             <div>
-                <SignIn/>
+                <SignButton
+                    registerPerson={handleSignIn}
+                >
+                    Sing In
+                </SignButton>
             </div>
         </form>
     )

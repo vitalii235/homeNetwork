@@ -33,26 +33,37 @@ export const userIsSignIn = payload => {
     }
 }
 
-export function User(email, nikName, userId, userApiAdress, friends, avatar) {
+export function User(email, nikName, userId, userApiAdress, friends, avatar, messages) {
     this.email = email;
     this.nikName = nikName;
     this.userId = userId;
     this.userApiAdress = userApiAdress;
     this.friends = friends;
     this.avatar = avatar;
+    this.messages=messages
 }
-export const userIteration = (data, r, id, history, dispatch, userIsSignIn, param) => {
+export const getUsers = async (history, userIsSignIn, userIteration, dispatch, path) => {
+    try {
+      const r = await authApi.usersList()
+      const id = localStorage.getItem('id')
+      if (id) {
+        userIteration(r.data, r, id, history, dispatch, userIsSignIn, path)
+      } else {
+        history.push('/auth')
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }
+export const userIteration = (data, r, id, history, dispatch, userIsSignIn, path='') => {
     dispatch(getAllUsers(data))
     for (let i in data) {
         if (r.data[i].userId === id) {
-            const user = new User(r.data[i].email, r.data[i].nikName, r.data[i].userId, i, r.data[i].friends, r.data[i].avatar)
-            if (user.friends) {
-                const newFriendsArr = user.friends.filter((i) => i !== null)
-                user.friends = newFriendsArr
-            }
+            console.log(r.data);
+            const user = new User(r.data[i].email, r.data[i].nikName, r.data[i].userId, i, r.data[i].friends, r.data[i].avatar, r.data[i].messages)
             dispatch(userIsSignIn(user))
-            if (param) { localStorage.setItem('id', r.data[i].userId) }
-            history.push('/main')
+            localStorage.setItem('id', r.data[i].userId)
+            history.push(`/main/${path}`)
         }
     }
 }

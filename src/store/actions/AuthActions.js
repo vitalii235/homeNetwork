@@ -16,11 +16,14 @@ import {
     EMAIL_IS_CORRECT,
     EMAIL_IS_NOT_EMPTY,
     EMAIL_IS_EMPTY,
-    IMG_VALUE,
-    IMG_IS_NOT_CORRECT,
-    IMG_IS_CORRECT,
     SPINER_IS_ACTIVE,
-    SPINER_IS_NOT_ACTIVE
+    SPINER_IS_NOT_ACTIVE,
+    UPLOAD_MODAL_IS_OPEN,
+    UPLOAD_MODAL_IS_CLOSED,
+    UPLOAD_FILES,
+    GET_LINK_TO_AVATAR,
+    IMAGE_IS_UPLOADEDING,
+    IMAGE_HAS_BEEN_UPLOADED
 } from "../types"
 import { authApi, userApi } from "../../services/API"
 
@@ -42,24 +45,7 @@ export const getNikNameValue = payload => {
         payload
     }
 }
-export const getImgValue =payload=>{
-    return{
-        type:IMG_VALUE,
-        payload
-    }
-}
-export const imgIsCorrect=payload=>{
-    return{
-        type:IMG_IS_CORRECT,
-        payload
-    }
-}
-export const imgIsNotCorrect=payload=>{
-    return{
-        type:IMG_IS_NOT_CORRECT,
-        payload
-    }
-}
+
 export const userExist = payload => {
     return {
         type: USER_EXIST,
@@ -144,21 +130,58 @@ export const emailLengthFalse = payload => {
         payload
     }
 }
-export const spinerIsActive=payload=>{
-    return{
-        type:SPINER_IS_ACTIVE,
+export const spinerIsActive = payload => {
+    return {
+        type: SPINER_IS_ACTIVE,
         payload
     }
 }
-export const spinereIsNotActive =payload=>{
-    return{
-        type:SPINER_IS_NOT_ACTIVE,
+export const spinereIsNotActive = payload => {
+    return {
+        type: SPINER_IS_NOT_ACTIVE,
         payload
     }
 }
-export const singUp = (item, userEmail, userPassword, nikName, avatar ) => {
+export const uploadModalIsOpen = payload => {
+    return {
+        type: UPLOAD_MODAL_IS_OPEN,
+        payload
+    }
+}
+export const uploadModalIsClosed = payload => {
+    return {
+        type: UPLOAD_MODAL_IS_CLOSED,
+        payload
+    }
+}
+export const uploadFiles = payload => {
+    return {
+        type: UPLOAD_FILES,
+        payload
+    }
+}
+export const getLinkToAvatar = payload => {
+    return {
+        type: GET_LINK_TO_AVATAR,
+        payload
+    }
+}
+export const imageIsUploading = payload => {
+    return {
+        type: IMAGE_IS_UPLOADEDING,
+        payload
+    }
+}
+export const imageHasBeenUploaded = payload => {
+    return {
+        type: IMAGE_HAS_BEEN_UPLOADED,
+        payload
+    }
+}
+export const singUp = (item, userEmail, userPassword, nikName, linkToPhotoAvatar) => {
     return async dispatch => {
         try {
+
             const result = await authApi.usersList()
             if (result) {
                 let listOfUsers = Object.values(result.data)
@@ -177,18 +200,17 @@ export const singUp = (item, userEmail, userPassword, nikName, avatar ) => {
                 if (!isUserRegistred[0] && isPasswordLong.length > 5 && !isNikNameExist[0] && nikName.length > 0 && userEmail.length > 0) {
                     try {
                         const r = await authApi.signUp(item)
-                        console.log('THIS IS RES===>>>', r);
-                        
+
                         if (r) {
                             const user = {
                                 email: r.data.email,
                                 nikName,
                                 userId: r.data.localId,
-                                avatar,
+                                avatar: linkToPhotoAvatar
                             }
                             const result = await authApi.postUsers(user)
-                            console.log(result);
-                            user.userApiAdress=result.data.name
+
+                            user.userApiAdress = result.data.name
                             userApi.addFriend(result.data.name, user)
                             dispatch(userIsRegistred())
                             dispatch(spinereIsNotActive())
